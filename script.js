@@ -11,18 +11,31 @@ window.addEventListener("message", function (ev) {
     console.log("setting dimensions", msg);
     window.parent.postMessage(msg, ev.origin);
   } else if (method === "setCSS") {
-    console.log('SET CSSING NOW')
+    console.log('setting CSS')
     const css = data.css;
     window.setCopiedStyle(css)
     console.log('copying style')
+  } else if (method === 'importFont') {
+    window.importStyle(data.font)
+    console.log('importing font', data.font)
   } else {
-    console.log('WTF', ev, ev.data)
+    console.log('unexpected method', method, ev, ev.data)
   }
 });
 
+window.importFont = function(styleName) {
+  const head = document.head;
+  const link = document.createElement("link");
+
+  link.type = "text/css";
+  link.rel = "stylesheet";
+  link.href = `https://fonts.googleapis.com/css?family=${styleName}`;
+  head.appendChild(link);
+}
+
 window.shrinkwrap = function () {
   const dataElem = document.getElementById("data");
-  console.log("SHRINKWRAP");
+  console.log("shrinkwrap");
   dataElem.style.margin = 0;
   dataElem.style.padding = 0;
   dataElem.style.width = "fit-content";
